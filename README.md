@@ -1,4 +1,4 @@
-ud120-projects
+Intro_MS
 ==============
 
-Starter project code for students taking Udacity ud120
+It is my modified version of "ud120-projects" repo, from Udacity, that is a starter project code for students taking Udacity ud120. 
