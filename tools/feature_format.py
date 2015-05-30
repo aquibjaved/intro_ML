@@ -121,3 +121,67 @@ def targetFeatureSplit( data ):
 
 
 
+def featureFormat2( dictionary, features, remove_NaN=True, remove_all_zeroes=True, remove_any_zeroes=False, sort_keys = False):
+    """ convert dictionary to numpy array of features
+        remove_NaN=True will convert "NaN" string to 0.0
+        remove_all_zeroes=True will omit any data points for which
+            all the features you seek are 0.0
+        remove_any_zeroes=True will omit any data points for which
+            any of the features you seek are 0.0
+        NOTE: first feature is assumed to be 'poi' and is not checked for
+            removal for zero or missing values.
+    """
+
+
+    return_list = []
+    key_list = []
+
+    if sort_keys:
+        # keys sorted in alphabetical order for final project compatibility
+        keys = sorted(dictionary.keys())
+    else:
+        # key orders will be different for Python 2 and Python 3; for Python 3
+        # users, load key order from 'python2_lesson##_keys.pkl' using pickle 
+        # to complete assignments.
+        keys = dictionary.keys()
+
+    for key in keys:
+        tmp_list = []
+        for feature in features:
+            try:
+                dictionary[key][feature]
+            except KeyError:
+                print "error: key ", feature, " not present"
+                return
+            value = dictionary[key][feature]
+            if value=="NaN" and remove_NaN:
+                value = 0
+            tmp_list.append( float(value) )
+
+        # Logic for deciding whether or not to add the data point.
+        append = True
+        # exclude 'poi' class as criteria.
+        if features[0] == 'poi':
+            test_list = tmp_list[1:]
+        else:
+            test_list = tmp_list
+        ### if all features are zero and you want to remove
+        ### data points that are all zero, do that here
+        if remove_all_zeroes:
+            append = False
+            for item in test_list:
+                if item != 0 and item != "NaN":
+                    append = True
+                    break
+        ### if any features for a given data point are zero
+        ### and you want to remove data points with any zeroes,
+        ### handle that here
+        if remove_any_zeroes:
+            if 0 in test_list or "NaN" in test_list:
+                append = False
+        ### Append the data point if flagged for addition.
+        if append:
+            key_list.append(np.array(key))
+            return_list.append( np.array(tmp_list) )
+
+    return np.array(return_list), np.array(key_list)
