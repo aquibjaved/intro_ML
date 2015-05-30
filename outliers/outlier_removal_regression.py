@@ -7,6 +7,9 @@ import pickle
 
 from outlier_cleaner import outlierCleaner
 
+from sklearn import linear_model
+from pprint import pprint
+
 
 ### load up some practice data with outliers in it
 ages = pickle.load( open("practice_outliers_ages.pkl", "r") )
@@ -27,11 +30,25 @@ ages_train, ages_test, net_worths_train, net_worths_test = train_test_split(ages
 ### the plotting code below works, and you can see what your regression looks like
 
 
+reg = linear_model.LinearRegression()
+### your code goes here!
+reg.fit (ages_train, net_worths_train)
 
 
 
 
+slope = reg.coef_[0][0] ### fill in the line of code to get the right value
+intercept = reg.intercept_[0] ### fill in the line of code to get the right value
+test_score = reg.score(ages_test, net_worths_test) ### fill in the line of code to get the right value
 
+
+### get the score on the training data
+training_score = reg.score(ages_train, net_worths_train)
+
+pprint({"slope":slope,
+        "intercept":intercept,
+        "stats on test":test_score,
+        "stats on training": training_score})
 
 
 
@@ -68,6 +85,20 @@ if len(cleaned_data) > 0:
     ### refit your cleaned data!
     try:
         reg.fit(ages, net_worths)
+
+        slope = reg.coef_[0][0] ### fill in the line of code to get the right value
+        intercept = reg.intercept_[0] ### fill in the line of code to get the right value
+        test_score = reg.score(ages_test, net_worths_test) ### fill in the line of code to get the right value
+
+
+        ### get the score on the training data
+        training_score = reg.score(ages_train, net_worths_train)
+
+        pprint({"slope":slope,
+                "intercept":intercept,
+                "stats on test":test_score,
+                "stats on training": training_score})
+        
         plt.plot(ages, reg.predict(ages), color="blue")
     except NameError:
         print "you don't seem to have regression imported/created,"
