@@ -59,11 +59,16 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, line below assumes 2 features)
+min_value=10*14
+max_value=0
 for f1, f2 in finance_features:
+    if f2>0:
+        if f2>max_value: max_value = f2
+        if f2<min_value: min_value = f2
     plt.scatter( f1, f2 )
 plt.show()
 
-
+print "max: {} ; min: {}".format(max_value,min_value)
 
 from sklearn.cluster import KMeans
 features_list = ["poi", feature_1, feature_2]
