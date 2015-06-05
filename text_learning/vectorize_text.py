@@ -4,6 +4,7 @@ import os
 import pickle
 import re
 import sys
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 sys.path.append( "../tools/" )
 from parse_out_email_text import parseOutText
@@ -41,34 +42,50 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
-        if temp_counter < 200:
+        if temp_counter < 10**10:
             path = os.path.join('..', path[:-1])
-            print path
+            if (temp_counter%1000==0): print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
+            text = parseOutText(email)
 
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
+            if  "sara" in text: i_from = 0 
+            elif  "chris" in text: i_from = 1
+            else: i_from=-1
+            # rep = {"sara": "", "shackleton": "", "chris": "", "germani": ""} # define desired replacements here
+            # rep = [trim(text.replace(k,v)) for k, v in rep.iteritems()]
+            
+            stemmed_words = text
+            for drop_word in ["sara", "shackleton", "chris", "germani"]:
+                stemmed_words = stemmed_words.replace(drop_word, "")
 
             ### append the text to word_data
+            # word_data.append(rep[0])
+            word_data.append(stemmed_words)
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
-
+            from_data.append(i_from)
 
             email.close()
 
 print "emails processed"
+print "word_data[152] : {}".format(word_data[152])
 from_sara.close()
 from_chris.close()
+
 
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
 
-
-
-
 ### in Part 4, do TfIdf vectorization here
+
+vectorizer = TfidfVectorizer(stop_words="english")
+vectorizer.fit_transform(word_data)
+
+print "number of features: {}".format(len(vectorizer.get_feature_names()))
 
 
