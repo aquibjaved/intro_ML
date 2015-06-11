@@ -36,6 +36,37 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+from sklearn import tree
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(features_train, labels_train)
+
+
+
+from sklearn.metrics import accuracy_score
+pred = clf.predict(features_test)
+acc = accuracy_score(labels_test, pred)
+print "Accuracy found on the test: {:.4f}".format(acc)
+
+from sklearn.metrics import accuracy_score
+pred = clf.predict(features_train)
+acc = accuracy_score(labels_train, pred)
+print "Accuracy found on the train: {:.4f}".format(acc)
+
+
+f_max = 0
+i_max = 0
+i_num = 0
+for i,n in enumerate(clf.feature_importances_):
+	if n>=0.2: i_num+=1
+	if n>f_max:
+		f_max = n
+		i_max = i
+
+print "The max value was {}, in the position {}".format(f_max, i_max)
+
+print "The most powerful word: {}".format(vectorizer.get_feature_names()[i_max])
+
+print "number of festures with importance >= 0.2: {}".format(i_num)
 
 
 
