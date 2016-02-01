@@ -29,6 +29,19 @@ plt.show()
 
 
 ### your code here!  name your classifier object clf if you want the 
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=3)
+clf=knn.fit(features_train, labels_train) 
+pred = knn.predict(features_test)
+acc = knn.score(features_test, labels_test)
+
+print acc
+
+
+
+
+
+
 ### visualization code (prettyPicture) to show you the decision boundary
 
 
